@@ -1,55 +1,67 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report:
+Version change: (template) -> 1.0.0
+Modified principles: All (Initial Definition)
+Added sections: Core Principles (Accuracy, Clarity, Reproducibility, Rigor), Standards & Constraints, Governance
+Removed sections: Generic placeholders
+Templates requiring updates:
+- .specify/templates/plan-template.md: ✅ Compatible (uses generic checks)
+- .specify/templates/spec-template.md: ✅ Compatible
+Follow-up TODOs: None
+-->
+
+# Physical AI & Humanoid Robotics Constitution
+<!-- Physical AI & Humanoid Robotics – AI/Spec-Driven Book Creation with Embedded RAG Chatbot -->
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Accuracy through Primary Source Verification
+All statements on robotics, physical AI systems, humanoid design, control architectures, perception models, embodied cognition, and agentic AI must be validated against authoritative primary sources.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Clarity for an Academic Audience
+Writing must be accessible to CS learners, robotics engineers, and AI practitioners, with focus on conceptual precision, technical depth, and unambiguous terminology.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Reproducibility
+All technical claims, algorithms, architectures, and implementation steps must be fully reproducible. All citations must be traceable.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Rigor
+Claims involving physical AI, robotics locomotion, humanoid control, multi-agent systems, and agent cognition must rely primarily on peer-reviewed papers, reputable academic texts, and industry standards.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+## Standards & Constraints
 
-### [PRINCIPLE_6_NAME]
+### Traceability & Citation
+- Every factual statement must connect to a citable source.
+- All references and in-text citations must follow APA 7 style.
 
+### Source Composition
+- At least 50% of the total sources must be peer-reviewed publications.
+- Minimum 15 authoritative sources required.
 
-[PRINCIPLE__DESCRIPTION]
+### Plagiarism & Integrity
+- Zero-tolerance policy for plagiarism.
+- All content must pass a plagiarism scan (Score = 0%) prior to finalization.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+### Writing & Format
+- Flesch-Kincaid grade 10–12 readability.
+- Word Count: 5,000–7,000 words total.
+- Output: PDF with embedded citations and Docusaurus-compatible page structure.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
-
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
-
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### Technical Integration
+- Content must be compatible with Docusaurus format and push-ready for GitHub Pages deployment.
+- Chapters must be structured to support accurate RAG retrieval.
+- Chatbot must respond strictly based on book text or user-highlighted text.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution defines the authoritative standards for the Physical AI & Humanoid Robotics project. All contributions must adhere to these principles.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+### Amendment Process
+Amendments require documentation of the change, rationale, and impact analysis. Version numbers must be incremented according to semantic versioning rules.
+
+### Compliance
+All chapters and code artifacts will be reviewed against these principles.
+- Verification Pass: All claims validated.
+- Technical Accuracy Review: Robotics correctness checked.
+- Reproducibility Review: Designs replicable by CS background readers.
+
+**Version**: 1.0.0 | **Ratified**: 2025-12-05 | **Last Amended**: 2025-12-05

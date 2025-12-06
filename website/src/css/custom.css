@@ -1,0 +1,198 @@
+/* Physical AI Book - Golden Standard Theme */
+:root {
+  /* Core Colors - Gold Standard */
+  --ifm-color-primary: #FFD700;
+  --ifm-color-primary-dark: #e5c100;
+  --ifm-color-primary-darker: #ccac00;
+  --ifm-color-primary-darkest: #aa8f00;
+  --ifm-color-primary-light: #ffe44d;
+  --ifm-color-primary-lighter: #ffeb80;
+  --ifm-color-primary-lightest: #fffce6;
+
+  --ifm-background-color: #050505;
+  --ifm-font-family-base: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Golden Theme Variables */
+  --gold-primary: #FFD700;
+  --gold-accent: #D4AF37;
+  --gold-pale: #FEEB9D;
+  --dark-bg: #050505;
+  --card-bg: #111111;
+
+  --ifm-navbar-background-color: #000000;
+  --ifm-footer-background-color: #000000;
+}
+
+[data-theme='dark'] {
+  --ifm-background-color: #050505;
+  --ifm-color-content-secondary: #aaaaaa;
+}
+
+/* 1. Global Background & Typography */
+body {
+  background-color: var(--dark-bg);
+  color: #e0e0e0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--gold-primary);
+  letter-spacing: -0.02em;
+}
+
+strong {
+  color: var(--gold-accent);
+}
+
+/* 2. Navbar */
+.navbar {
+  border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+  box-shadow: none;
+}
+
+.navbar__title {
+  color: var(--gold-primary);
+  font-weight: 800;
+}
+
+.navbar__link:hover,
+.navbar__link--active {
+  color: var(--gold-primary);
+}
+
+/* 3. Sidebar */
+.menu {
+  padding: 1rem;
+}
+
+.menu__list-item-collapsible {
+  margin-bottom: 0.5rem;
+}
+
+/* Sidebar Category Labels (Modules) */
+.menu__list-item-collapsible .menu__link {
+  color: var(--gold-primary);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+}
+
+/* Sidebar Active Link */
+.menu__link--active {
+  color: var(--dark-bg);
+  background: var(--gold-primary);
+  background: linear-gradient(90deg, var(--gold-primary) 0%, var(--gold-accent) 100%);
+  border-radius: 4px;
+}
+
+.menu__link:hover:not(.menu__link--active) {
+  color: var(--gold-primary);
+  background: rgba(255, 215, 0, 0.1);
+}
+
+/* 4. Hero Section */
+.hero {
+  background-color: var(--dark-bg);
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.hero__title {
+  color: var(--gold-primary);
+  font-size: 3.5rem;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.hero__subtitle {
+  color: #cccccc;
+}
+
+/* 5. Buttons */
+.button--primary {
+  --ifm-button-background-color: var(--gold-primary);
+  --ifm-button-color: #000;
+  border: none;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.2s ease;
+}
+
+.button--primary:hover {
+  background-color: var(--gold-accent);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+}
+
+.button--secondary {
+  border: 1px solid var(--gold-primary);
+  color: var(--gold-primary);
+  background: transparent;
+}
+
+.button--secondary:hover {
+  background: rgba(255, 215, 0, 0.1);
+  border-color: var(--gold-accent);
+}
+
+/* 6. Cards & Containers */
+.card {
+  background: var(--card-bg);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.card:hover {
+  border-color: var(--gold-primary);
+  transform: translateY(-2px);
+}
+
+/* 7. Markdown Content */
+.markdown h1 {
+  border-bottom: 2px solid var(--gold-primary);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+  display: inline-block;
+}
+
+.markdown blockquote {
+  border-left: 4px solid var(--gold-primary);
+  background: rgba(255, 215, 0, 0.05);
+  padding: 1rem;
+  border-radius: 0 4px 4px 0;
+}
+
+a {
+  color: var(--gold-primary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: var(--gold-accent);
+  text-decoration: underline;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--dark-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-accent);
+}
