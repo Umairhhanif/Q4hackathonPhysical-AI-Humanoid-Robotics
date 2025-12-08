@@ -4,7 +4,11 @@ from src.core.config import settings
 from typing import List
 
 # Initialize clients
-openai_client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
+if settings.OPENAI_API_KEY:
+    openai_client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
+else:
+    openai_client = None
+
 genai.configure(api_key=settings.GOOGLE_API_KEY)
 
 async def get_embedding(text: str) -> List[float]:
