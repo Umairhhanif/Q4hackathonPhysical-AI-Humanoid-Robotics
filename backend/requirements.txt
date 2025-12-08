@@ -2,7 +2,7 @@ fastapi
 uvicorn[standard]
 pydantic
 pydantic-settings
-qdrant-client
+qdrant-client>=1.16.1
 openai
 google-generativeai
 sqlalchemy
@@ -10,3 +10,6 @@ asyncpg
 python-dotenv
 langchain-text-splitters
 tiktoken
+cohere>=5.20.0
+requests>=2.32.5
+trafilatura>=2.0.0
