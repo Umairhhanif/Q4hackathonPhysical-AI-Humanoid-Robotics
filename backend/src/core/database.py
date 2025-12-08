@@ -3,11 +3,22 @@ from sqlalchemy.orm import DeclarativeBase
 from src.core.config import settings
 
 # Create async engine
-# Note: DATABASE_URL should start with postgresql+asyncpg://
+# Parse database URL
+database_url = settings.DATABASE_URL
+if "postgresql://" in database_url:
+    database_url = database_url.replace("postgresql://", "postgresql+asyncpg://")
+
+# Handle sslmode for asyncpg
+connect_args = {}
+if "?sslmode=" in database_url:
+    database_url = database_url.split("?")[0]
+    connect_args["ssl"] = "require"
+
 engine = create_async_engine(
-    settings.DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://"),
+    database_url,
     echo=False,
     future=True,
+    connect_args=connect_args,
 )
 
 # Create session factory
