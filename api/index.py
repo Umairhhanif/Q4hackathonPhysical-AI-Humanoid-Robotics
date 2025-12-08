@@ -1,7 +1,8 @@
 import os
 import json
 
-# Minimal ASGI handler for Vercel
+# Version: 2.0 - Minimal ASGI handler
+
 async def app(scope, receive, send):
     if scope['type'] == 'http':
         path = scope['path']
