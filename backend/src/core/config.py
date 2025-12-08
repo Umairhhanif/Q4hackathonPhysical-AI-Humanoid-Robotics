@@ -1,16 +1,21 @@
-import os
-from pydantic_settings import BaseSettings
-from dotenv import load_dotenv
-
-load_dotenv()
+from pydantic_settings import BaseSettings, SettingsConfigDict
+from typing import List
 
 class Settings(BaseSettings):
-    PROJECT_NAME: str = "Physical AI Book RAG"
-    OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
-    QDRANT_URL: str = os.getenv("QDRANT_URL", "http://localhost:6333")
-    QDRANT_API_KEY: str = os.getenv("QDRANT_API_KEY", "")
+    API_V1_STR: str = "/api/v1"
+    PROJECT_NAME: str = "Physical AI RAG Chatbot"
+    API_SECRET: str
     
-    class Config:
-        case_sensitive = True
+    OPENAI_API_KEY: str
+    GOOGLE_API_KEY: str
+    
+    QDRANT_URL: str
+    QDRANT_API_KEY: str
+    
+    DATABASE_URL: str
+    
+    BACKEND_CORS_ORIGINS: List[str] = ["http://localhost:3000", "https://q4hackathon-physical-ai-humanoid-ro.vercel.app"]
+
+    model_config = SettingsConfigDict(env_file=".env", case_sensitive=True, extra="ignore")
 
 settings = Settings()
