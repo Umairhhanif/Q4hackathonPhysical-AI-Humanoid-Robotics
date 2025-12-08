@@ -1,95 +1,132 @@
 import os
-import sys
-
-# Vercel serverless function handler
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, StreamingResponse
-from pydantic import BaseModel
-from typing import List, Optional
 import json
 
-# Create FastAPI app
-app = FastAPI(title="Physical AI RAG Chatbot")
-
-# CORS configuration
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# Models
-class ChatMessage(BaseModel):
-    role: str
-    content: str
-
-class ChatRequest(BaseModel):
-    query: str
-    selected_text: Optional[str] = None
-    history: List[ChatMessage] = []
-
-# Health check endpoint
-@app.get("/")
-@app.get("/health")
-def health_check():
-    env_status = {
-        "GOOGLE_API_KEY": "✓" if os.getenv("GOOGLE_API_KEY") else "✗",
-        "QDRANT_URL": "✓" if os.getenv("QDRANT_URL") else "✗",
-        "QDRANT_API_KEY": "✓" if os.getenv("QDRANT_API_KEY") else "✗",
-        "DATABASE_URL": "✓" if os.getenv("DATABASE_URL") else "✗",
-        "API_SECRET": "✓" if os.getenv("API_SECRET") else "✗",
-    }
-    return {
-        "status": "ok",
-        "message": "Physical AI RAG Chatbot API",
-        "environment_variables": env_status,
-        "python_version": sys.version,
-        "cwd": os.getcwd()
-    }
-
-# Chat endpoint
-@app.post("/chat")
-async def chat_endpoint(request: ChatRequest):
-    try:
-        # Check if required env vars are present
-        if not os.getenv("GOOGLE_API_KEY"):
-            raise HTTPException(status_code=500, detail="GOOGLE_API_KEY not configured")
+# Minimal ASGI handler for Vercel
+async def app(scope, receive, send):
+    if scope['type'] == 'http':
+        path = scope['path']
+        method = scope['method']
         
-        # Import here to avoid startup issues
-        import google.generativeai as genai
+        # Health check endpoint
+        if path in ['/', '/health'] and method == 'GET':
+            env_status = {
+                "GOOGLE_API_KEY": "✓" if os.getenv("GOOGLE_API_KEY") else "✗",
+                "QDRANT_URL": "✓" if os.getenv("QDRANT_URL") else "✗",
+                "QDRANT_API_KEY": "✓" if os.getenv("QDRANT_API_KEY") else "✗",
+                "DATABASE_URL": "✓" if os.getenv("DATABASE_URL") else "✗",
+                "API_SECRET": "✓" if os.getenv("API_SECRET") else "✗",
+            }
+            
+            response_body = json.dumps({
+                "status": "ok",
+                "message": "Physical AI RAG Chatbot API",
+                "environment_variables": env_status
+            }).encode('utf-8')
+            
+            await send({
+                'type': 'http.response.start',
+                'status': 200,
+                'headers': [
+                    [b'content-type', b'application/json'],
+                    [b'access-control-allow-origin', b'*'],
+                ],
+            })
+            await send({
+                'type': 'http.response.body',
+                'body': response_body,
+            })
+            return
         
-        genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-        model = genai.GenerativeModel('gemini-1.5-flash')
-        
-        async def event_generator():
+        # Chat endpoint
+        elif path == '/chat' and method == 'POST':
+            # Read request body
+            body = b''
+            while True:
+                message = await receive()
+                if message['type'] == 'http.request':
+                    body += message.get('body', b'')
+                    if not message.get('more_body'):
+                        break
+            
             try:
-                # Simple response without RAG for now (to test basic functionality)
+                request_data = json.loads(body.decode('utf-8'))
+                query = request_data.get('query', '')
+                
+                if not os.getenv("GOOGLE_API_KEY"):
+                    error_response = json.dumps({"error": "GOOGLE_API_KEY not configured"}).encode('utf-8')
+                    await send({
+                        'type': 'http.response.start',
+                        'status': 500,
+                        'headers': [
+                            [b'content-type', b'application/json'],
+                            [b'access-control-allow-origin', b'*'],
+                        ],
+                    })
+                    await send({
+                        'type': 'http.response.body',
+                        'body': error_response,
+                    })
+                    return
+                
+                # Import Google Generative AI
+                import google.generativeai as genai
+                
+                genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+                model = genai.GenerativeModel('gemini-1.5-flash')
+                
+                # Start streaming response
+                await send({
+                    'type': 'http.response.start',
+                    'status': 200,
+                    'headers': [
+                        [b'content-type', b'text/event-stream'],
+                        [b'access-control-allow-origin', b'*'],
+                        [b'cache-control', b'no-cache'],
+                    ],
+                })
+                
+                # Generate response
                 system_prompt = """You are an expert assistant for the 'Physical AI & Humanoid Robotics' book.
 Answer the user's question helpfully and concisely."""
                 
-                full_prompt = f"{system_prompt}\n\nQuestion: {request.query}"
-                
-                # Generate streaming response
+                full_prompt = f"{system_prompt}\n\nQuestion: {query}"
                 response = model.generate_content(full_prompt, stream=True)
                 
-                full_response = ""
                 for chunk in response:
                     if chunk.text:
-                        full_response += chunk.text
-                        yield f"data: {json.dumps({'type': 'token', 'data': chunk.text})}\n\n"
+                        data = json.dumps({'type': 'token', 'data': chunk.text})
+                        await send({
+                            'type': 'http.response.body',
+                            'body': f"data: {data}\n\n".encode('utf-8'),
+                            'more_body': True,
+                        })
                 
-                yield "data: [DONE]\n\n"
+                # Send done message
+                await send({
+                    'type': 'http.response.body',
+                    'body': b"data: [DONE]\n\n",
+                    'more_body': False,
+                })
                 
             except Exception as e:
-                yield f"data: {json.dumps({'type': 'error', 'data': str(e)})}\n\n"
+                error_data = json.dumps({'type': 'error', 'data': str(e)})
+                await send({
+                    'type': 'http.response.body',
+                    'body': f"data: {error_data}\n\n".encode('utf-8'),
+                    'more_body': False,
+                })
+            return
         
-        return StreamingResponse(event_generator(), media_type="text/event-stream")
-    
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        # 404 for other paths
+        await send({
+            'type': 'http.response.start',
+            'status': 404,
+            'headers': [[b'content-type', b'text/plain']],
+        })
+        await send({
+            'type': 'http.response.body',
+            'body': b'Not Found',
+        })
 
-# Vercel requires the app to be exported
+# Vercel handler
 handler = app

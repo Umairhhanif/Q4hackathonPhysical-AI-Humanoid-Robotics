@@ -1,11 +1,1 @@
-fastapi
-uvicorn[standard]
-pydantic==1.10.15
-qdrant-client
-openai
 google-generativeai
-sqlalchemy
-asyncpg
-python-dotenv
-langchain-text-splitters
-tiktoken
