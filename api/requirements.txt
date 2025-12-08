@@ -1,6 +1,6 @@
 fastapi
 uvicorn[standard]
-pydantic
+pydantic==1.10.15
 pydantic-settings
 qdrant-client
 openai
