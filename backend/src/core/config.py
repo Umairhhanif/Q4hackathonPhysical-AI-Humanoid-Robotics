@@ -1,12 +1,12 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from typing import List
+from typing import List, Optional
 
 class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
     PROJECT_NAME: str = "Physical AI RAG Chatbot"
     API_SECRET: str
     
-    OPENAI_API_KEY: str
+    OPENAI_API_KEY: Optional[str] = None
     GOOGLE_API_KEY: str
     
     QDRANT_URL: str
