@@ -1,0 +1,68 @@
+openapi: 3.0.0
+info:
+  title: RAG Chatbot API
+  version: 1.0.0
+  description: Backend API for the Physical AI Book RAG Chatbot
+paths:
+  /chat:
+    post:
+      summary: Send a message to the chatbot
+      operationId: chat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - query
+              properties:
+                query:
+                  type: string
+                  description: The user's question
+                selected_text:
+                  type: string
+                  description: Optional selected text context from the book
+                history:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      role:
+                        type: string
+                        enum: [user, assistant]
+                      content:
+                        type: string
+      responses:
+        '200':
+          description: Successful response (streaming)
+          content:
+            text/event-stream:
+              schema:
+                type: string
+                description: Server-sent events stream of the answer
+  /ingest:
+    post:
+      summary: Trigger ingestion of book content
+      operationId: ingest
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: Ingestion started
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Ingestion started"
+                  chunks_processed:
+                    type: integer
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
