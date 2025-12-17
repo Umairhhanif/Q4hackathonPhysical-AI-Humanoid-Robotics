@@ -1,4 +1,5 @@
-export const API_BASE_url = "http://localhost:8000/api/v1";
+export const API_BASE_url =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
 
 export interface ChatMessage {
   role: "user" | "assistant" | "system";
