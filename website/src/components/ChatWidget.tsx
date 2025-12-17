@@ -32,22 +32,58 @@ export default function ChatWidget() {
     setQuery('');
     setLoading(true);
 
-    try {
-      const res = await fetch('http://localhost:8000/api/v1/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: queryToSend }),
-      });
-      const data = await res.json();
+    // Add empty assistant message that will be filled with streaming tokens
+    let assistantContent = '';
+    setMessages(prev => [...prev, { role: 'assistant', content: '' }]);
 
-      // Add assistant message
-      const assistantMessage: Message = { role: 'assistant', content: data.answer };
-      setMessages(prev => [...prev, assistantMessage]);
+    try {
+      const { sendChatRequest } = await import('../services/api');
+
+      await sendChatRequest(
+        {
+          query: queryToSend,
+          history: messages.map(m => ({ role: m.role, content: m.content }))
+        },
+        // onToken - append each token to the assistant message
+        (token: string) => {
+          assistantContent += token;
+          setMessages(prev => {
+            const newMessages = [...prev];
+            newMessages[newMessages.length - 1] = { role: 'assistant', content: assistantContent };
+            return newMessages;
+          });
+        },
+        // onSources - ignore for now
+        () => { },
+        // onError
+        (error: string) => {
+          console.error('Chat error:', error);
+          setMessages(prev => {
+            const newMessages = [...prev];
+            newMessages[newMessages.length - 1] = {
+              role: 'assistant',
+              content: 'Error connecting to AI. Please try again.'
+            };
+            return newMessages;
+          });
+        },
+        // onComplete
+        () => {
+          setLoading(false);
+        }
+      );
     } catch (e) {
-      const errorMessage: Message = { role: 'assistant', content: 'Error connecting to AI. Please try again.' };
-      setMessages(prev => [...prev, errorMessage]);
+      console.error('Chat error:', e);
+      setMessages(prev => {
+        const newMessages = [...prev];
+        newMessages[newMessages.length - 1] = {
+          role: 'assistant',
+          content: 'Error connecting to AI. Please try again.'
+        };
+        return newMessages;
+      });
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleAskAIFromSelection = (selectedText: string) => {

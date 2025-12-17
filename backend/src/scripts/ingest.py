@@ -21,7 +21,7 @@ load_dotenv()
 QDRANT_URL = os.getenv("QDRANT_URL", "http://localhost:6333")
 QDRANT_API_KEY = os.getenv("QDRANT_API_KEY", "")
 COHERE_API_KEY = os.getenv("COHERE_API_KEY", "")
-COLLECTION_NAME = "physical_ai_book"
+COLLECTION_NAME = "book_content_gemini"  # Changed to match backend
 DOCS_PATH = Path(__file__).parent.parent.parent.parent / "website" / "docs"
 CHUNK_SIZE = 1000  # characters per chunk
 CHUNK_OVERLAP = 200  # overlap between chunks

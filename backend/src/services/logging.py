@@ -10,6 +10,10 @@ async def log_interaction(
     successful: bool = True
 ):
     """Log chat interaction to Postgres."""
+    # Skip logging if database is not configured
+    if AsyncSessionLocal is None:
+        return
+    
     async with AsyncSessionLocal() as session:
         try:
             log_entry = InteractionLog(

@@ -5,7 +5,7 @@ from typing import List
 
 # Initialize clients
 openai_client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
-genai.configure(api_key=settings.GOOGLE_API_KEY)
+genai.configure(api_key=settings.GEMINI_API_KEY)
 
 async def get_embedding(text: str) -> List[float]:
     """Generate embedding for a single string using Google Gemini."""
@@ -16,6 +16,19 @@ async def get_embedding(text: str) -> List[float]:
         task_type="retrieval_query"
     )
     return result['embedding']
+
+async def get_cohere_embedding(text: str) -> List[float]:
+    """Generate embedding using Cohere (matches ingested data)."""
+    import cohere
+    import os
+    co = cohere.ClientV2(api_key=os.getenv("COHERE_API_KEY"))
+    response = co.embed(
+        texts=[text],
+        model="embed-english-v3.0",
+        input_type="search_query",
+        embedding_types=["float"]
+    )
+    return response.embeddings.float_[0]
 
 async def generate_response(prompt: str, system_instruction: str = None) -> str:
     """Generate response using Google Gemini."""
